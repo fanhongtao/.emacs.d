@@ -14,3 +14,9 @@
 (require 'semantic-gcc)
 (global-srecode-minor-mode 1)
 
+
+;; ECB
+(require 'ecb)
+(ecb-activate)
+
+
