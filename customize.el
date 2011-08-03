@@ -6,9 +6,20 @@
 (setq inhibit-startup-message t)
 (setq column-number-mode 1)
 (setq default-fill-column 120)
-(setq-default make-backup-files nil)
+(setq default-major-mode 'text-mode)
+(setq default-tab-width 4)
+(setq kill-whole-line t)            ; Kill the whole line if cursor is at begin of line
 (setq transient-mark-mode t)
-(prefer-coding-system 'utf-8)
+(setq make-backup-files nil)
+(setq track-eol t)
+
+; (prefer-coding-system 'utf-8)
+
+(global-set-key [M-left]    'windmove-left)
+(global-set-key [M-right]   'windmove-right)
+(global-set-key [M-up]      'windmove-up)
+(global-set-key [M-down]    'windmove-down)
+
 
 ; Code completion
 (global-set-key [(M-/)] 'hippie-expand)
@@ -44,7 +55,11 @@
 (load-file "~/.emacs.d/site-lisp/common/cedet-1.0/common/cedet.el")
 (require 'semantic-ia)
 (require 'semantic-gcc)
+(semantic-load-enable-minimum-features)
+(semantic-load-enable-code-helpers)
+(semantic-load-enable-gaudy-code-helpers)
 (semantic-load-enable-excessive-code-helpers)
+(semantic-load-enable-semantic-debugging-helpers)
 (global-ede-mode t)
 (global-srecode-minor-mode 1)
 (global-set-key [f12] 'semantic-ia-fast-jump)
@@ -60,11 +75,6 @@
 (require 'ecb)
 (setq ecb-tip-of-the-day nil)   ; Disable Tip of Day
 (ecb-activate)
-
-(global-set-key [M-left]    'windmove-left)
-(global-set-key [M-right]   'windmove-right)
-(global-set-key [M-up]      'windmove-up)
-(global-set-key [M-down]    'windmove-down)
 
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
