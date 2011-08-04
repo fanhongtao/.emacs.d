@@ -69,12 +69,34 @@
 (define-key semantic-tag-folding-mode-map (kbd "C-c z c") 'semantic-tag-folding-fold-block)
 (define-key semantic-tag-folding-mode-map (kbd "C-c z o") 'semantic-tag-folding-show-block)
 
+;==============================================================================
+; Read project setting
+(defun auto-load-ebe-project ()
+    (setq ebe-proj-name ".emacsprj/project.ebe")
+    (setq current-dir (expand-file-name "."))
+    (setq last-dir nil)
+    (while (not (string= last-dir  current-dir))
+        ; (message "=============== [%s]" current-dir)
+        (setq last-dir current-dir)
+        (if (file-readable-p (expand-file-name ebe-proj-name  current-dir))
+            (
+                (load (expand-file-name ebe-proj-name  current-dir))
+                ;(message ">>>>>>>>>>  file %s exist" ebe-proj-name)
+            )
+            (setq current-dir (directory-file-name (file-name-directory current-dir)))
+        )
+        ;(message "=============== l:[%s], c:[%s]" last-dir current-dir)
+    )
+)
+
+(auto-load-ebe-project)
 
 ;==============================================================================
 ; ECB
 (require 'ecb)
 (setq ecb-tip-of-the-day nil)   ; Disable Tip of Day
 (ecb-activate)
+(ecb-toggle-ecb-windows)
 
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
