@@ -72,16 +72,17 @@
 ;==============================================================================
 ; Read project setting
 (defun auto-load-ebe-project ()
-    (setq ebe-proj-name ".emacsprj/project.ebe")
+    (setq ebe-proj-name ".emacsprj/ede-project.el")
     (setq current-dir (expand-file-name "."))
     (setq last-dir nil)
     (while (not (string= last-dir  current-dir))
         ; (message "=============== [%s]" current-dir)
         (setq last-dir current-dir)
-        (if (file-readable-p (expand-file-name ebe-proj-name  current-dir))
-            (
-                (load (expand-file-name ebe-proj-name  current-dir))
-                ;(message ">>>>>>>>>>  file %s exist" ebe-proj-name)
+        (setq proj-file-name (expand-file-name ebe-proj-name  current-dir))
+        (if (file-readable-p proj-file-name)
+            (progn
+                (message "Find EDE project file: %s" proj-file-name)
+                (load proj-file-name)
             )
             (setq current-dir (directory-file-name (file-name-directory current-dir)))
         )
