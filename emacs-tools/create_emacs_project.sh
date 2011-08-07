@@ -5,6 +5,14 @@ function log() {
     echo `date +"%Y-%m-%d %H:%M:%S"` $* 
 }
 
+function add_to_gitignore() {
+    x=`grep $1 $gitfile`
+    if [ "x$x" == "x" ]; then
+        log "Append \"$1\" to $gitfile"
+        echo "$1" >> $gitfile
+    fi
+}
+
 if [ $# -ne 1 ]; then
     echo "Usage $0 project_path"
     exit 1;
@@ -20,7 +28,13 @@ else
 fi
 log "Base_path: ${base_path}"
 
-# create project dir
+# Make sure the .gitignore file do exist
+touch ".gitignore"
+
+# Generate tags with GNU global
+gtags
+
+# Create project dir
 proj_dir=".emacsprj"
 if [ ! -d ${proj_dir} ]; then
     log "mkdir '${proj_dir}'"
@@ -28,41 +42,29 @@ if [ ! -d ${proj_dir} ]; then
 fi
 cd ${proj_dir}
 
-
-
-# create cscope file
-log "Create file 'cscope.files' ..."
-find ${base_path} -name "*.[ch]" -o -name "*.cpp" -o -name "*.inl" > cscope.files
-cscope -bq
-
-# create ctag file
-log "Create file 'tags' ..."
-ctags --fields=+aiS --C++-types=+p --extra=+q -L cscope.files
-
-# get include path, so that we can use 'Ctrl-Wgf' or 'Ctrl-gf' to open a include file with filename under cursor 
-inc_dirs=`grep "\.h$" cscope.files | awk '{n=split($0, a, "/"); print substr($0, 0, length($0) - length(a[n]))}' | sort | uniq`
-tmppath=":include-path '( "
-for one in $inc_dirs
-do
-    tmppath+="\""${one}"\" "
-done
-tmppath+=" )"
+# get include path
+inc_dirs=`find ".." -name "*.h" | awk '{n=split($0, a, "/"); print substr($0, 0, length($0) - length(a[n]))}' | sort | uniq`
 
 # create EDE project file
-log "Create file 'ede-project.el' ..."
-echo "(ede-cpp-root-project \"NAME\" :file (expand-file-name \".gitignore\"  current-dir) 
-    $tmppath
-    )" > ede-project.el
+ede_file="ede-project.el"
+log "Create file '$ede_file' ..."
+echo "(ede-cpp-root-project \"NAME\" :file (expand-file-name \".gitignore\"  current-dir)" > $ede_file
+echo "    :include-path '(" >> $ede_file
+for one in $inc_dirs
+do
+    echo "        \"${one##..}\"" >> $ede_file
+done
+echo "    )" >> $ede_file
+echo ")" >> $ede_file
 
 # add directory '.emacsprj' to git's ignore list 
 cd ..
-file=".git/info/exclude"
-if [ -f $file ]; then
-    x=`grep ${proj_dir} $file`
-    if [ "x$x" == "x" ]; then
-        log "Change Git's exclude file."
-        echo "${proj_dir}/" >> $file
-    fi
+gitfile=".git/info/exclude"
+if [ -f $gitfile ]; then
+    add_to_gitignore "${proj_dir}/"
+    add_to_gitignore "GPATH"
+    add_to_gitignore "GRTAGS"
+    add_to_gitignore "GTAGS"
 fi
 
 log "Exit."

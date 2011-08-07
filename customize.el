@@ -64,10 +64,28 @@
 (global-srecode-minor-mode 1)
 (global-set-key [f12] 'semantic-ia-fast-jump)
 
+; Enable support for gnu global
+; So that we jump to the implementation of function, not the declaration.
+(require 'semanticdb-global)
+(semanticdb-enable-gnu-global-databases 'c-mode)
+(semanticdb-enable-gnu-global-databases 'c++-mode)
+
 ; Enable folding
+; We can use "C-c , -" to fold tag, "C-c , +" to unfold.
 (global-semantic-tag-folding-mode 1)
-(define-key semantic-tag-folding-mode-map (kbd "C-c z c") 'semantic-tag-folding-fold-block)
-(define-key semantic-tag-folding-mode-map (kbd "C-c z o") 'semantic-tag-folding-show-block)
+; (define-key semantic-tag-folding-mode-map (kbd "C-c z c") 'semantic-tag-folding-fold-block)
+; (define-key semantic-tag-folding-mode-map (kbd "C-c z o") 'semantic-tag-folding-show-block)
+
+
+(defun my-c-mode-cedet-hook ()
+    (local-set-key "." 'semantic-complete-self-insert)
+    (local-set-key ">" 'semantic-complete-self-insert))
+(add-hook 'c-mode-common-hook 'my-c-mode-cedet-hook)
+
+(defun my-c-mode-common-hook ()
+    (define-key c-mode-base-map (kbd "C-c , a") 'eassist-switch-h-cpp)
+    (define-key c-mode-base-map (kbd "C-c , l") 'eassist-list-methods))
+(add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
 
 ;==============================================================================
 ; Read project setting
@@ -98,6 +116,9 @@
 (setq ecb-tip-of-the-day nil)   ; Disable Tip of Day
 (ecb-activate)
 (ecb-toggle-ecb-windows)
+
+; The default keymap "C-c , lw" is too much, so I map it to 'F9'
+(global-set-key [f9] 'ecb-toggle-ecb-windows)
 
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
