@@ -51,6 +51,17 @@
 (color-theme-dark-laptop)
 
 ;==============================================================================
+; Plugin: undo-tree
+;   http://www.dr-qubit.org/emacs.php
+(require 'undo-tree)
+(global-undo-tree-mode)
+
+;==============================================================================
+; Plugin: undo-tree
+;   http://www.dr-qubit.org/emacs.php
+(require 'xcscope)
+
+;==============================================================================
 ; CEDET
 (load-file "~/.emacs.d/site-lisp/common/cedet-1.0/common/cedet.el")
 (require 'semantic-ia)
