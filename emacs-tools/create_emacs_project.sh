@@ -34,6 +34,9 @@ touch ".gitignore"
 # Generate tags with GNU global
 gtags
 
+# Generate cscope database
+cscope-indexer -r
+
 # Create project dir
 proj_dir=".emacsprj"
 if [ ! -d ${proj_dir} ]; then
@@ -65,6 +68,8 @@ if [ -f $gitfile ]; then
     add_to_gitignore "GPATH"
     add_to_gitignore "GRTAGS"
     add_to_gitignore "GTAGS"
+    add_to_gitignore "cscope.files"
+    add_to_gitignore "cscope.out"
 fi
 
 log "Exit."
