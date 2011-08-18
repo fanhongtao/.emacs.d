@@ -8,10 +8,17 @@
 (setq default-fill-column 120)
 (setq default-major-mode 'text-mode)
 (setq default-tab-width 4)
-(setq kill-whole-line t)            ; Kill the whole line if cursor is at begin of line
+(setq kill-whole-line t)   ; Kill the whole line if cursor is at begin of line
 (setq transient-mark-mode t)
 (setq make-backup-files nil)
 (setq track-eol t)
+
+; Start emacs-server, so that we can use the fellowing command to
+; edit file(s) in a exist emacs
+;    emacsclient -n files-to-edit
+(setq server-use-tcp t)
+(setq server-host "localhost")
+(server-start)
 
 ; (prefer-coding-system 'utf-8)
 
@@ -23,7 +30,7 @@
 
 ; Code completion
 (global-set-key [(M-/)] 'hippie-expand)
-(setq hippie-expand-try-functions-list 
+(setq hippie-expand-try-functions-list
   '(try-expand-dabbrev
     try-expand-dabbrev-visible
     try-expand-dabbrev-all-buffers
@@ -36,7 +43,7 @@
     try-complete-lisp-symbol-partially
     try-complete-lisp-symbol))
 
- 
+
 ;==============================================================================
 ; Plugin: linum
 ;   http://web.student.tuwien.ac.at/~e0225855/linum/linum.html
@@ -57,8 +64,8 @@
 (global-undo-tree-mode)
 
 ;==============================================================================
-; Plugin: undo-tree
-;   http://www.dr-qubit.org/emacs.php
+; Plugin: xcscope, extract from source code of cscope
+;   http://cscope.sourceforge.net/
 (require 'xcscope)
 
 ;==============================================================================
