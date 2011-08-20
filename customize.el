@@ -17,7 +17,7 @@
 ; edit file(s) in a exist emacs
 ;    emacsclient -n files-to-edit
 (setq server-use-tcp t)
-(setq server-host "localhost")
+(setq server-host "local-host")
 (server-start)
 
 ; (prefer-coding-system 'utf-8)
@@ -62,6 +62,12 @@
 ;   http://www.dr-qubit.org/emacs.php
 (require 'undo-tree)
 (global-undo-tree-mode)
+
+;==============================================================================
+; Plugin: Google C/C++ Programming Style
+(require 'google-c-style)
+(add-hook 'c-mode-common-hook 'google-set-c-style)
+(add-hook 'c-mode-common-hook 'google-make-newline-indent)
 
 ;==============================================================================
 ; Plugin: xcscope, extract from source code of cscope
